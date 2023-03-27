@@ -1,0 +1,113 @@
+import React, { useState } from 'react';
+const shows = [
+  { id: 1, name: 'Show A', price: 10 },
+  { id: 2, name: 'Show B', price: 20 },
+  { id: 3, name: 'Show C', price: 30 },
+];
+const CheckoutPage = () => {
+  const [selectedShow, setSelectedShow] = useState(null);
+  const [selectedQuantity, setSelectedQuantity] = useState(1);
+  const [billingInfo, setBillingInfo] = useState({
+    name: '',
+    email: '',
+    address: '',
+  });
+  const fee = 2.5;
+  const handleShowSelect = (show) => {
+    setSelectedShow(show);
+  };
+  const handleQuantitySelect = (event) => {
+    setSelectedQuantity(parseInt(event.target.value));
+  };
+  const handleBillingInfoChange = (event) => {
+    setBillingInfo({
+      ...billingInfo,
+      [event.target.name]: event.target.value,
+    });
+  };
+  const calculateTotalCost = () => {
+    if (!selectedShow) {
+      return 0;
+    }
+    const subtotal = selectedShow.price * selectedQuantity;
+    return subtotal + fee;
+  };
+  const handleCheckout = (event) => {
+    event.preventDefault();
+    // TODO: simulate checkout process
+  };
+  return (
+    <div>
+      <h1>Checkout</h1>
+      <div>
+        <h2>Upcoming Shows</h2>
+        <ul>
+          {shows.map((show) => (
+            <li key={show.id}>
+              <button onClick={() => handleShowSelect(show)}>
+                {show.name} (${show.price})
+              </button>
+            </li>
+          ))}
+        </ul>
+      </div>
+      <div>
+        <h2>Quantity</h2>
+        <input
+          type="number"
+          value={selectedQuantity}
+          onChange={handleQuantitySelect}
+        />
+      </div>
+      <div>
+        <h2>Billing Information</h2>
+        <form>
+          <label>
+            Name:
+            <input
+              type="text"
+              name="name"
+              value={billingInfo.name}
+              onChange={handleBillingInfoChange}
+            />
+          </label>
+          <br />
+          <label>
+            Email:
+            <input
+              type="email"
+              name="email"
+              value={billingInfo.email}
+              onChange={handleBillingInfoChange}
+            />
+          </label>
+          <br />
+          <label>
+            Address:
+            <textarea
+              name="address"
+              value={billingInfo.address}
+              onChange={handleBillingInfoChange}
+            />
+          </label>
+        </form>
+      </div>
+      <div>
+        <h2>Order Summary</h2>
+        {selectedShow ? (
+          <div>
+            <p>{selectedShow.name}</p>
+            <p>Quantity: {selectedQuantity}</p>
+            <p>Subtotal: ${selectedShow.price * selectedQuantity}</p>
+            <p>Fee: ${fee}</p>
+            <p>Total: ${calculateTotalCost()}</p>
+          </div>
+        ) : (
+          <p>Please select a show</p>
+        )}
+      </div>
+      <button onClick={handleCheckout}>Checkout</button>
+    </div>
+  );
+};
+export default CheckoutPage;
